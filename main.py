@@ -30,19 +30,20 @@ parser.add_argument('--max-grad-norm', type=float, default=50,
                     help='value loss coefficient (default: 50)')
 parser.add_argument('--seed', type=int, default=1,
                     help='random seed (default: 1)')
-parser.add_argument('--num-processes', type=int, default=4,
+parser.add_argument('--num-processes', type=int, default=8,
                     help='how many training processes to use (default: 4)')
-parser.add_argument('--num-steps', type=int, default=20,
+parser.add_argument('--num-steps', type=int, default=5,
                     help='number of forward steps in A3C (default: 20)')
 parser.add_argument('--max-episode-length', type=int, default=1000000,
                     help='maximum length of an episode (default: 1000000)')
 parser.add_argument('--env-name', default='PongDeterministic-v4',
                     help='environment to train on (default: PongDeterministic-v4)')
-parser.add_argument('--no-shared', default=False,
+parser.add_argument('--no-shared', default=True,
                     help='use an optimizer without shared momentum.')
 
 
 if __name__ == '__main__':
+    mp.set_start_method("spawn")
     os.environ['OMP_NUM_THREADS'] = '1'
     os.environ['CUDA_VISIBLE_DEVICES'] = ""
 
