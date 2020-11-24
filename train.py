@@ -51,8 +51,8 @@ def train(rank, args, shared_model, counter, lock, optimizer=None):
             episode_length += 1
             value, logit, (hx, cx) = model((state.unsqueeze(0),
                                             (hx, cx)))
-            prob = F.softmax(logit, dim=-1)
-            log_prob = F.log_softmax(logit, dim=-1)
+            prob = F.softmax(logit, dim=1)
+            log_prob = F.log_softmax(logit, dim=1)
             entropy = -(log_prob * prob).sum(1, keepdim=True)
             entropies.append(entropy)
 
@@ -102,7 +102,8 @@ def train(rank, args, shared_model, counter, lock, optimizer=None):
 
         optimizer.zero_grad()
 
-        (policy_loss + args.value_loss_coef * value_loss).backward()
+        total_loss = policy_loss + args.value_loss_coef * value_loss
+        total_loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_grad_norm)
 
         ensure_shared_grads(model, shared_model)

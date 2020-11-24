@@ -41,7 +41,7 @@ def test(rank, args, shared_model, counter):
 
         with torch.no_grad():
             value, logit, (hx, cx) = model((state.unsqueeze(0), (hx, cx)))
-        prob = F.softmax(logit, dim=-1)
+        prob = F.softmax(logit, dim=1)
         action = prob.max(1, keepdim=True)[1].numpy()
 
         state, reward, done, _ = env.step(action[0, 0])
